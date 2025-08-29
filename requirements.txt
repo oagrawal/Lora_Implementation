@@ -1,0 +1,7 @@
+accelerate==0.27.2
+peft==0.13.2
+transformers==4.40.2
+trl==0.11.4
+bitsandbytes-cuda112==0.26.0.post2
+torch>=1.10.0
+datasets==2.19.2
