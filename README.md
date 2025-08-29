@@ -1,6 +1,7 @@
 # LoRA Fine-tuning for TinyLlama
 
-This repository contains code for fine-tuning the TinyLlama 1.1B model using LoRA (Low-Rank Adaptation).
+This repository contains code for fine-tuning the TinyLlama 1.1B model using LoRA (Low-Rank Adaptation). The original work and experiments were performed using a Jupyter notebook on AWS SageMaker.
+
 
 ## How to Run
 
