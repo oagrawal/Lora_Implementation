@@ -44,11 +44,28 @@ We will use TinyLLama for this homework. This model has the same architecture an
 
 ## Performance Analysis
 
-### Training time Comparion
-- Compare how changing the LoRA module size (rank) affect training latency. For simplicity, you can simply limit the number of training step by setting `max_steps` in `TrainingArguments` to limit the number of training steps. You will not be graded on the loss/accuracy.
-- Calculate the number of trainable parameters after applying LoRA modules. What is the ratio of trainable parameters with respect to the total number of parameters in the model?
-- What is relationship between training latency and LoRA module size?
+### Training Time Comparison
 
-### Reasoning and Challenges:
-- How do you decide which linear layers to modify with LoRA?
-- Describe any challenges you encountered while implement LoRA.
+We compared how changing the LoRA module size (rank) affects training latency for 128 steps.
+
+| Rank | Training Time (s) | Trainable Params | Total Params | Trainable % |
+|------|-------------------|------------------|--------------|-------------|
+| 4    | 310.74            | 2,027,520        | 1,102,075,904| 0.18%       |
+| 16   | 309.78            | 8,110,080        | 1,108,158,464| 0.73%       |
+| 64   | 312.52            | 32,440,320       | 1,132,488,704| 2.86%       |
+| 256  | 330.32            | 129,761,280      | 1,229,809,664| 10.55%      |
+
+The number of trainable parameters was calculated by iterating through the model's parameters and summing up the ones that require gradients.
+
+The relationship between training latency and LoRA module size is that as the rank increases, the training time also increases. However, the increase in training time is not substantial for the ranks we tested.
+
+### Reasoning and Challenges
+
+**How do you decide which linear layers to modify with LoRA?**
+
+We modified the projection layers (`up_proj`, `down_proj`, `gate_proj`) within the MLP block of each transformer layer. We chose these because LoRA is designed to be applied to linear layers, and the feed-forward network's projection layers are a straightforward and effective place to inject the low-rank adaptation. We identified these layers by inspecting the TinyLlama model architecture.
+
+**Describe any challenges you encountered while implementing LoRA.**
+
+The main challenge was identifying the correct layers within the TinyLlama model to replace with our custom LoRA implementation. We overcame this by examining the model's structure and printing the layers to understand which modules were linear layers suitable for modification.
+
